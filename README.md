@@ -1,8 +1,8 @@
-# Ponteiros, Chamada por Referência e Alocação Dinâmica em C
+# Funções, Ponteiros, Chamada por Referência e Alocação Dinâmica em C
 
-Guia didático e prático para quem trava tentando entender por que uma variável não muda dentro de uma função, qual a diferença entre `&x` e `*p`, ou como mexer em vetores sem usar colchetes.
+Guia didático e prático para quem trava tentando entender como uma função recebe e devolve valores, por que uma variável não muda dentro dela, qual a diferença entre `&x` e `*p`, ou como mexer em vetores sem usar colchetes.
 
-Todo o conteúdo segue **uma única analogia** do início ao fim: endereços e cartas. A ideia é que, uma vez que essa analogia fizer sentido, todo o resto (funções, vetores, alocação dinâmica) vira só uma aplicação repetida da mesma ideia.
+O guia segue a ordem em que esses temas fazem mais sentido pra aprender: primeiro funções puras (parâmetro, retorno, recursão, sem ponteiro nenhum), depois ponteiros e tudo que se apoia neles. A partir da seção de ponteiros, o conteúdo segue **uma única analogia** do início ao fim: endereços e cartas. A ideia é que, uma vez que essa analogia fizer sentido, todo o resto (vetores, alocação dinâmica) vira só uma aplicação repetida da mesma ideia.
 
 ## Estrutura do repositório
 
@@ -11,23 +11,142 @@ Listas-em-c/   # arquivos .c originais com os exercícios completos
 README.md      # este guia, explicando o raciocínio por trás de cada exercício
 ```
 
-Os trechos de código comentados ao longo deste README são extraídos e adaptados dos arquivos dentro de `Listas-em-c/`. Eles servem como **base de estudo**: a leitura explica o porquê de cada linha, mas o aprendizado fica mais sólido rodando, alterando e testando os arquivos originais da pasta no seu compilador (GCC, VS Code, Dev-C++, o que preferir). Sempre que possível, compile o exercício, quebre o código de propósito e observe o que muda, essa é a forma mais rápida de internalizar ponteiros.
+Os trechos de código comentados ao longo deste README são extraídos e adaptados dos arquivos dentro de `Listas-em-c/` (`lista1-funcoes.c` e `lista2_funcoes_ponteiros.c`). Eles servem como **base de estudo**: a leitura explica o porquê de cada linha, mas o aprendizado fica mais sólido rodando, alterando e testando os arquivos originais da pasta no seu compilador (GCC, VS Code, Dev-C++, o que preferir). Sempre que possível, compile o exercício, quebre o código de propósito e observe o que muda, essa é a forma mais rápida de internalizar o conteúdo.
 
 ## Sumário
 
-1. [O que é um ponteiro](#1-o-que-é-um-ponteiro)
-2. [Declarando e usando ponteiros](#2-declarando-e-usando-ponteiros)
-3. [Ponteiros e vetores](#3-ponteiros-e-vetores)
-4. [Chamada por valor x chamada por referência](#4-chamada-por-valor-x-chamada-por-referência)
-5. [Vetores como referência automática](#5-vetores-como-referência-automática)
-6. [Alocação dinâmica de memória](#6-alocação-dinâmica-de-memória)
-7. [Matrizes dinâmicas](#7-matrizes-dinâmicas)
-8. [Checklist de erros comuns](#8-checklist-de-erros-comuns)
-9. [Perguntas de fixação](#9-perguntas-de-fixação)
+1. [Funções: a base antes dos ponteiros](#1-funções-a-base-antes-dos-ponteiros)
+2. [O que é um ponteiro](#2-o-que-é-um-ponteiro)
+3. [Declarando e usando ponteiros](#3-declarando-e-usando-ponteiros)
+4. [Ponteiros e vetores](#4-ponteiros-e-vetores)
+5. [Chamada por valor x chamada por referência](#5-chamada-por-valor-x-chamada-por-referência)
+6. [Vetores como referência automática](#6-vetores-como-referência-automática)
+7. [Alocação dinâmica de memória](#7-alocação-dinâmica-de-memória)
+8. [Matrizes dinâmicas](#8-matrizes-dinâmicas)
+9. [Checklist de erros comuns](#9-checklist-de-erros-comuns)
+10. [Perguntas de fixação](#10-perguntas-de-fixação)
 
 ---
 
-## 1. O que é um ponteiro
+## 1. Funções: a base antes dos ponteiros
+
+> Código-base para praticar: `Listas-em-c/lista1-funcoes.c`. Essa lista restringe o uso de ponteiros e struct de propósito, o foco aqui é só entender função, parâmetro e retorno.
+
+Antes de qualquer ponteiro, vale consolidar o que é uma função em C: um bloco de código que recebe valores de entrada (parâmetros), faz algo com eles, e devolve um resultado (`return`).
+
+### Declaração, definição e chamada
+
+```c
+int soma(int x, int y); // declaração (protótipo): avisa ao compilador que essa função existe
+```
+
+A declaração no topo do arquivo permite que o `main()` chame a função mesmo ela sendo definida (implementada de verdade) só mais abaixo no arquivo.
+
+```c
+int soma(int x, int y) {
+    return x + y; // definição: aqui está o corpo de verdade da função
+}
+```
+
+```c
+int r = soma(a, b); // chamada: executa a função com a e b como argumentos
+```
+
+Repare que os nomes dos parâmetros na declaração (`x`, `y`) não precisam ser os mesmos usados na chamada (`a`, `b`). Os valores de `a` e `b` são copiados para dentro de `x` e `y` no momento da chamada, e `x`/`y` só existem enquanto a função está rodando.
+
+### Exemplo completo comentado
+
+```c
+int soma(int x, int y) {
+    return x + y;
+    // recebe x e y, devolve a soma direto no return, sem variável intermediária
+}
+
+int eh_par(int n) {
+    if (n % 2 == 0)
+        return 1;  // 1 representa "verdadeiro" em C
+    return 0;      // 0 representa "falso"
+    // o resto da divisão por 2 (%) é zero apenas quando o número é par
+}
+
+int maior(int a, int b) {
+    if (a > b)
+        return a;
+    return b;
+    // compara os dois parâmetros e devolve o maior deles
+}
+
+int potencia(int base, int expoente) {
+    int i, result = 1;
+    for (i = 0; i < expoente; i++)
+        result *= base;
+    return result;
+    // result começa em 1 (elemento neutro da multiplicação)
+    // e é multiplicado por "base" repetidamente, "expoente" vezes,
+    // simulando base^expoente sem usar a função pow()
+}
+
+int fatorial(int n) {
+    int i, result;
+    result = 1;
+    for (i = n; i > 0; i--)
+        result *= i;
+    return result;
+    // i começa em n e desce até 1, multiplicando result a cada volta
+    // fatorial(4) = 1 * 4 * 3 * 2 * 1 = 24
+}
+```
+
+### Recursão: uma função que chama a si mesma
+
+```c
+int fatorial_rec(int n) {
+    if (n == 1 || n == 0)
+        return 1; // caso base: obrigatório, senão a função nunca para de se chamar
+    return n * fatorial_rec(n - 1); // caso recursivo: quebra o problema em um menor
+}
+```
+
+Rastreando `fatorial_rec(4)` chamada por chamada:
+
+```
+fatorial_rec(4) = 4 * fatorial_rec(3)
+fatorial_rec(3) = 3 * fatorial_rec(2)
+fatorial_rec(2) = 2 * fatorial_rec(1)
+fatorial_rec(1) = 1                     <- caso base, para de chamar
+```
+
+E as multiplicações acontecem enquanto essas chamadas "voltam", na ordem inversa: `2 * 1 = 2`, depois `3 * 2 = 6`, depois `4 * 6 = 24`. O resultado final é o mesmo do `fatorial()` com laço, só que construído através da cadeia de chamadas em vez de um laço explícito.
+
+### Chamando tudo no main
+
+```c
+int main(void) {
+    int a = 4, b = 6, r;
+
+    r = soma(a, b);
+    printf("Soma: %d\n", r); // 10
+
+    if (eh_par(b))
+        printf("Par: %d\n", b); // executa, porque 6 é par
+
+    printf("Maior: %d\n", maior(a, b)); // 6
+
+    printf("Potencia: %d\n", potencia(2, 10)); // 1024
+
+    printf("Fatorial: %d\n", fatorial(a)); // 24
+
+    printf("Fatorial Recursivo: %d\n", fatorial_rec(a)); // 24
+
+    return 0;
+}
+```
+
+Esse exemplo, com as funções já implementadas, é a base pra tudo que vem a seguir: assim que ficar claro que `soma(a, b)` recebe cópias de `a` e `b` (e não os endereços deles), fica muito mais fácil entender por que às vezes isso é uma limitação, e é exatamente essa limitação que os ponteiros resolvem na próxima seção.
+
+---
+
+## 2. O que é um ponteiro
 
 ### A analogia: endereço e carta
 
@@ -98,7 +217,7 @@ printf("agora x = %d\n", x); // prova que x virou 20 através de p
 
 ---
 
-## 2. Declarando e usando ponteiros
+## 3. Declarando e usando ponteiros
 
 ### Ponteiros nulos e endereços inválidos
 
@@ -120,7 +239,7 @@ char *pc;   // anda de 1 em 1 byte (tamanho de char)
 
 ---
 
-## 3. Ponteiros e vetores
+## 4. Ponteiros e vetores
 
 ### A rua com casas numeradas em sequência
 
@@ -163,7 +282,7 @@ for (int i = 0; i < 5; i++) printf("%d\n", *(pv + i));
 
 ---
 
-## 4. Chamada por valor x chamada por referência
+## 5. Chamada por valor x chamada por referência
 
 > Código-base para praticar: `Listas-em-c/lista2_funcoes_ponteiros.c` (exercícios) e `Listas-em-c/lista2_funcoes_ponteiros-sol.c` (soluções comentadas). Os trechos abaixo são recortes desses arquivos.
 
@@ -239,7 +358,7 @@ void normaliza_trio(float *x, float *y, float *z) {
 
 ---
 
-## 5. Vetores como referência automática
+## 6. Vetores como referência automática
 
 > Continuação da mesma lista de exercícios (`Listas-em-c/lista2_funcoes_ponteiros.c`), agora com funções que recebem vetores inteiros como parâmetro. Vale abrir o arquivo e testar cada função isoladamente antes de seguir pro próximo exercício.
 
@@ -342,7 +461,7 @@ void inverte(int *v, int n) {
 
 ---
 
-## 6. Alocação dinâmica de memória
+## 7. Alocação dinâmica de memória
 
 > O trecho abaixo é o mesmo raciocínio usado em `Listas-em-c/lista2_funcoes_ponteiros-sol.c`, no ponto em que o vetor estático `v1[5] = {1,2,3,4,5};` é reescrito usando `malloc`. Comparar as duas versões lado a lado, a estática e a dinâmica, ajuda a enxergar exatamente o que muda.
 
@@ -406,7 +525,7 @@ v1 = NULL; // depois do free, o endereço continua escrito na carta,
 
 ---
 
-## 7. Matrizes dinâmicas
+## 8. Matrizes dinâmicas
 
 Uma matriz é um vetor de vetores. Na mesma analogia, cada casa da rua principal não guarda um número, guarda o endereço de uma rua secundária inteira.
 
@@ -436,7 +555,7 @@ free(matriz); // só depois libera o vetor de ponteiros
 
 ---
 
-## 8. Checklist de erros comuns
+## 9. Checklist de erros comuns
 
 * Esquecer o `free()` depois de um `malloc`/`calloc`/`realloc` (memory leak)
 * Usar um ponteiro sem inicializar, sem `NULL` e sem apontar pra nada válido (comportamento indefinido, possível Segmentation Fault)
@@ -450,16 +569,18 @@ free(matriz); // só depois libera o vetor de ponteiros
 
 ---
 
-## 9. Perguntas de fixação
+## 10. Perguntas de fixação
 
 Tente responder cada uma sem consultar o material, e só depois confira com o texto acima:
 
-1. Qual a diferença entre `p`, `&p` e `*p`?
-2. Por que `troca_invalida(a, b)` não troca `a` e `b`, mas `troca_ref(&a, &b)` troca?
-3. Por que `zera(v1, 5)` funciona sem precisar de `&v1`?
-4. O que `p++` faz de verdade quando `p` é `int*`?
-5. Por que esquecer o `free()` é perigoso?
-6. Numa matriz dinâmica, por que as linhas são liberadas antes da matriz principal?
+1. Por que `soma(a, b)` não altera `a` e `b` originais, mesmo usando `return`?
+2. Por que `fatorial_rec` precisa de um caso base (`n == 1 || n == 0`)?
+3. Qual a diferença entre `p`, `&p` e `*p`?
+4. Por que `troca_invalida(a, b)` não troca `a` e `b`, mas `troca_ref(&a, &b)` troca?
+5. Por que `zera(v1, 5)` funciona sem precisar de `&v1`?
+6. O que `p++` faz de verdade quando `p` é `int*`?
+7. Por que esquecer o `free()` é perigoso?
+8. Numa matriz dinâmica, por que as linhas são liberadas antes da matriz principal?
 
 ---
 
