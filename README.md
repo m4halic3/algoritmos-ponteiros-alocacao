@@ -20,7 +20,7 @@
 
 ---
 
-## Bloco 1 (14:10–15:00) — Fundamentos: o que é um ponteiro
+## Fundamentos: o que é um ponteiro
 
 ### A analogia mestra: **casa e endereço**
 
@@ -62,7 +62,7 @@ printf("%d", *p_x); // 100 — acesso indireto (mesma coisa, caminho diferente)
 
 `*p = 10;` não muda o ponteiro — muda **o que está no endereço apontado**. É a diferença entre trocar o papel com o endereço na sua mão e ir até a casa e reformar ela por dentro.
 
-### Exercício ao vivo (do slide, "Exercício 1" e "Exercício 2")
+### Exercício (do slide, "Exercício 1" e "Exercício 2")
 Peça pro aluno digitar e prever a saída **antes** de rodar:
 ```c
 int x = 10;
@@ -80,7 +80,7 @@ printf("agora x = %d\n", x); // prova que x virou 20
 
 ---
 
-## Bloco 2 (15:00–15:40) — Ponteiro + vetor e aritmética
+## Ponteiro + vetor e aritmética
 
 ### Analogia: **a rua com casas numeradas**
 
@@ -121,7 +121,7 @@ Mostre a equivalência: `vetor[i]` é **exatamente** `*(vetor + i)`. Isso é o "
 
 ---
 
-## Bloco 3 (15:55–16:40) — Chamada por valor x chamada por referência
+## Chamada por valor x chamada por referência
 
 Esse é o coração da lista de exercícios (`lista2_funcoes_ponteiros.c`). Use a analogia do slide da profa: **cópia do RG x GPS da casa real**.
 
@@ -194,11 +194,11 @@ void normaliza_trio(float *x, float *y, float *z) {
     *z -= m;
 }
 ```
-Gancho importante (slide "Poder e Responsabilidade"): em C, `return` só devolve **um** valor. Passar por referência é como abrir três "canais de retorno" simultâneos — é assim que se "retorna" mais de uma coisa.
+Gancho importante: em C, `return` só devolve **um** valor. Passar por referência é como abrir três "canais de retorno" simultâneos — é assim que se "retorna" mais de uma coisa.
 
 ---
 
-## Bloco 4 (16:40–17:30) — Vetores: referência automática
+## Vetores: referência automática
 
 ### Analogia: vetor é "empresta a rua inteira automaticamente"
 
@@ -245,7 +245,7 @@ void troca_extremos(int *v, int n) {
 }
 ```
 
-Depois os mais avançados — bom momento pra deixar o aluno tentar sozinho com você acompanhando:
+Depois os mais avançados o:
 
 ```c
 /* 12) Filtragem por faixa em outro vetor; retorna quantidade copiada */
@@ -296,7 +296,7 @@ void inverte(int *v, int n) {
 
 ---
 
-## Bloco 5 (17:30–17:55) — Alocação dinâmica: quando a "rua" ainda não existe
+## Alocação dinâmica: quando a "rua" ainda não existe
 
 ### Analogia: **gaveta sob encomenda x prédio já construído**
 
@@ -334,7 +334,7 @@ Depois do `free`, o endereço continua guardado em `v1`, mas a "casa" foi demoli
 
 ---
 
-## Fechamento (17:55–18:00)
+## Fechamento
 
 Perguntas rápidas de verificação (peça respostas em voz alta, sem consultar nada):
 1. Qual a diferença entre `p`, `&p` e `*p`?
