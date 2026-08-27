@@ -7,7 +7,7 @@ Se você já travou tentando entender por que uma variável não muda dentro de 
 
 ## Fundamentos: o que é um ponteiro
 
-### A analogia mestra: **casa e endereço**
+### **casa e endereço**
 
 Fixe essa analogia porque ela sustenta a aula inteira:
 
@@ -22,7 +22,7 @@ int x = 10;      // a casa "x" existe, com o número 10 dentro
 int *p = &x;     // p é um papelzinho: "o endereço de x é tal"
 ```
 
-Mostre no quadro/terminal (slide "Descobrindo Coordenadas"):
+Mostre no quadro/terminal:
 ```c
 printf("Valor: %d\n", x);          // acesso direto: o que tem dentro da casa
 printf("Endereco: %p\n", (void*)&x); // qual é o endereço da casa
@@ -47,8 +47,8 @@ printf("%d", *p_x); // 100 — acesso indireto (mesma coisa, caminho diferente)
 
 `*p = 10;` não muda o ponteiro — muda **o que está no endereço apontado**. É a diferença entre trocar o papel com o endereço na sua mão e ir até a casa e reformar ela por dentro.
 
-### Exercício (do slide, "Exercício 1" e "Exercício 2")
-Peça pro aluno digitar e prever a saída **antes** de rodar:
+### Exercício de exemplo
+**antes** de rodar:
 ```c
 int x = 10;
 int *p = &x;
@@ -99,10 +99,6 @@ for (int i = 0; i < 5; i++) scanf("%d", pv + i);       // sem usar v[i]!
 for (int i = 0; i < 5; i++) printf("%d\n", *(pv + i));
 ```
 Mostre a equivalência: `vetor[i]` é **exatamente** `*(vetor + i)`. Isso é o "clique" que costuma faltar.
-
----
-
-## Intervalo (15:40–15:55)
 
 ---
 
