@@ -1,22 +1,7 @@
 # Aula: Ponteiros e Chamada por Referência em C
-**Duração:** 14h00 às 18h00 (4h) · **Base:** slides "Ponteiros em C" e "Chamada por Referência / Alocação Dinâmica" (Profa. Tiemi Sakata) + `lista2_funcoes_ponteiros.c`
+Repositório de estudos focado em desmistificar **Ponteiros**, **Chamada por Referência** e **Alocação Dinâmica** na linguagem C. 
 
-**Objetivo do dia:** o aluno sair sabendo, na ponta da língua, o que significa `int *p`, `&x` e `*p`, por que passar `int x` para uma função não muda o original, por que passar `int *x` muda, e como isso se aplica a vetores. Tudo isso amarrado diretamente ao arquivo de exercícios que ele vai entregar.
-
----
-
-## Cronograma
-
-| Horário | Bloco | Duração |
-|---|---|---|
-| 14:00–14:10 | Abertura e diagnóstico rápido | 10 min |
-| 14:10–15:00 | Bloco 1 — Fundamentos: variável, endereço, ponteiro | 50 min |
-| 15:00–15:40 | Bloco 2 — Ponteiro + vetor, aritmética de ponteiros | 40 min |
-| 15:40–15:55 | ☕ Intervalo | 15 min |
-| 15:55–16:40 | Bloco 3 — Chamada por valor x chamada por referência | 45 min |
-| 16:40–17:30 | Bloco 4 — Aplicando em vetores (a lista de exercícios) | 50 min |
-| 17:30–17:55 | Bloco 5 — Alocação dinâmica (malloc/free) | 25 min |
-| 17:55–18:00 | Fechamento e dúvidas | 5 min |
+Se você já travou tentando entender por que uma variável não muda dentro de uma função, qual a diferença entre `&x` e `*p`, ou como mexer em vetores sem usar colchetes, este material foi feito para você.
 
 ---
 
