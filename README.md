@@ -91,7 +91,7 @@ p_i++;   // pula 4 bytes (o tamanho de um int), não 1 byte
 - `mat` (nome do vetor) = ponteiro **constante**: fixo, não pode fazer `mat++`.
 - `int *p_mat = mat;` = ponteiro **variável**: pode navegar livremente (`p_mat++`, `p_mat += 3`, etc).
 
-### Exercício ao vivo (slide "Exercício 3" e "Exercício 4")
+### Exercício 
 ```c
 int v[5]; 
 int *pv = v;
