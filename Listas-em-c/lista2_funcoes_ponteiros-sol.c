@@ -1,69 +1,30 @@
 /*
- * Lista de Exercícios – Chamada por referência
- * Tema: Chamada por valor, por referência (ponteiros) e vetores
- * Autora: Profa. Tiemi Christine Sakata (enunciado adaptado)
- * 
- * Instruções para estudantes:
- *  - Cada exercício possui uma função (ou mais) com corpo TODO.
- *  - Substitua os trechos TODO pelo seu código.
- *  - Mantenha as assinaturas (tipos e nomes dos parâmetros).
- *  - Faça a chamada das funções no main
- *  - O arquivo compila como está (retornos padrão), mas não resolve nada.
- *  - Use o bloco de testes no final (opcional) para validar suas soluções.
+ * Lista 2 - Chamada por valor, por referencia (ponteiros) e vetores
+ * Disciplina: Estrutura de Dados
+ *
+ * Arquivo: lista2-referencia.c
+ * Material de apoio - solucao comentada.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-/* 1) Incrementa o valor de x */
+/* --- Declaracoes --- */
 void inc(int x);
-
-/* 2) Troca o valor de x por y */
 void troca_invalida(int x, int y);
-
-/* 3) (Conceitual) — justificar por que não é possível trocar sem ponteiros. */
-
-/* 4) Troca que FUNCIONA (swap por referência) */
 void troca_ref(int *x, int *y);
-
-// 24/08
-/* 5) Incremento por referência */
 void inc_ref(int *p);
-
-// 24/08
-/* 6) Troca condicional: troca apenas se *a > *b; retorna 1 se trocou, 0 caso contrário */
 int troca_se_maior(int *a, int *b);
-
-/* 7) Normalização de três valores: subtrai a média de cada um */
 void normaliza_trio(float *x, float *y, float *z);
-
-// 24/08
-/* 8) Zera vetor */
 void zera(int *v, int n);
-
-/* 9) Soma e média (sem alterar o vetor) */
 int soma(const int *v, int n);
-
 float media_int(const int *v, int n);
-
-/* 10) Escala in-place: v[i] *= k */
 void escala(float *v, int n, float k);
-
-// 24/08
-/* 11) Troca de extremos: v[0] <-> v[n-1] */
 void troca_extremos(int *v, int n);
-
-/* 12) Filtragem por faixa em outro vetor; retorna quantidade copiada */
 int filtra_faixa(const float *origem, int n, float *destino, float L, float U);
-
-/* 13) Índice do mínimo (primeira ocorrência) */
 int indice_min(const float *v, int n);
 int indice_max(const float *v, int n);
-
-/* 14) Remover a primeira ocorrência e deslocar; atualiza *n */
 void remove_primeiro(int *v, int *n, int alvo);
-
-/* 15) Inversão in-place */
 void inverte(int *v, int n);
 
 static void print_int(const int *v, int n){ for(int i=0;i<n;++i) printf("%d%s", v[i], (i==n-1)?"\n":" "); }
@@ -72,85 +33,89 @@ static void print_float(const float *v, int n){ for(int i=0;i<n;++i) printf("%.2
 int main(void) {
     int *p;
     int a = 10, b = 7;
-    //int v1[5] = {1,2,3,4,5};
     float d1[5] = {1,-2,3,4.5,0};
     int v2[5] = {1,2,3,4,5};
     float o[5] = {1,10,5,20,7};
     float dest[5];
     float num1 = 8.0, num2 = 5.0, num3 = 5.0;
 
-    // TODO 24/08
-    // Altere a declaracao de vetores por ponteiros com alocacao dinamica
-    int *v1;
-    v1 = (int *) malloc (5 * sizeof(int));
+    /* v1 alocado dinamicamente e preenchido com 1,2,3,4,5 usando aritmetica de ponteiros */
+    int *v1 = (int *) malloc(5 * sizeof(int));
     if (v1 == NULL)
         return 1;
     *v1 = 1;
     for (p = v1 + 1; p < v1 + 5; p++)
-        *p = *(p-1) + 1;
+        *p = *(p - 1) + 1;
 
-    // TODO: chamada da funcao inc passando a como parametro
+    /* [1] Chamada por valor: inc recebe uma copia de "a", entao o original nao muda */
+    inc(a);
     printf("[1] a=%d (esperado 10)\n", a);
-   
-    // TODO: chamada de troca_invalida
+
+    /* [2] Mesma ideia: troca_invalida recebe copias de a e b */
+    troca_invalida(a, b);
     printf("[2] a=%d b=%d (esperado 10,7)\n", a, b);
 
-    // TODO: chamada de troca_ref
+    /* [4] Passando os enderecos de a e b, a funcao altera os originais */
     troca_ref(&a, &b);
     printf("[4] swap ref: a=%d b=%d\n", a, b);
 
-    // TODO: chamada de inc_ref
+    /* [5] Incremento por referencia */
     inc_ref(&a);
     printf("[5] inc_ref: a=%d\n", a);
 
-    // TODO: chamada de troca_se_maior passando a e b nessa ordem
+    /* [6] Troca condicional: so troca se *a > *b */
+    troca_se_maior(&a, &b);
     printf("[6] a > b?: a=%d b=%d\n", a, b);
 
-    // TODO: chamada de troca_se_maior passando b e a nessa ordem
+    troca_se_maior(&b, &a);
     printf("[6] a > b?: a=%d b=%d\n", a, b);
 
-    // TODO: chamada da funcao normaliza trio para num1, num2, num3
-    printf("[7] apos normalizar: num1=%.2lf num2=%.2lf num3=%.2lf\n", num1, num2, num3);
+    /* [7] Normalizacao: subtrai a media dos tres valores */
+    normaliza_trio(&num1, &num2, &num3);
+    printf("[7] apos normalizar: num1=%.2f num2=%.2f num3=%.2f\n", num1, num2, num3);
 
-    //TODO: chamada da funcao para zerar v1
-    print_int(v1,5);
-    zera(v1, 5); // v1 eh o endereco do 1o elem do vetor
-    printf("[8] zerando um vetor\n"); 
-    print_int(v1,5);
+    /* [8] Zerando o vetor v1 (alocado dinamicamente) */
+    print_int(v1, 5);
+    zera(v1, 5);
+    printf("[8] zerando um vetor\n");
+    print_int(v1, 5);
 
-    // TODO: chamada das funcoes soma e media_int de v2
-    print_int(v2,5);
-    //printf("[9] Soma: %d, Media: %.2lf\n", /*chamar as funcoes aqui*/); 
+    /* [9] Soma e media de v2, sem alterar o vetor */
+    print_int(v2, 5);
+    printf("[9] Soma: %d, Media: %.2f\n", soma(v2, 5), media_int(v2, 5));
 
-    print_float(d1,5);
-    // TODO: chamada a funcao escala fazendo com que triplique o valor de d1
+    /* [10] Escala d1 in-place multiplicando por 3 */
+    print_float(d1, 5);
+    escala(d1, 5, 3.0f);
     printf("[10]: triplica vetor: ");
-    print_float(d1,5);
+    print_float(d1, 5);
 
+    /* [11] Troca o primeiro elemento com o ultimo */
     printf("[11]: Troca primeiro pelo ultimo: ");
-    // TODO: chamada da funcao troca_extremos para v2
-    print_int(v2,5);
+    troca_extremos(v2, 5);
+    print_int(v2, 5);
 
-    // filtra todos os elementos entre 5 e 15 do vetor o
-    int k = filtra_faixa(o,5,dest,5,15); 
-    printf("[12] numero de 5 a 15: k=%d: ", k); 
-    print_float(dest,k);
- 
-    print_float(o,5);
-    // armazena em min e max o indice do menor e do maior elemento do vetor o
+    /* [12] Filtra elementos de "o" entre 5 e 15, copiando para dest */
+    int k = filtra_faixa(o, 5, dest, 5, 15);
+    printf("[12] numero de 5 a 15: k=%d: ", k);
+    print_float(dest, k);
+
+    print_float(o, 5);
+    /* [13] Indices do menor e do maior elemento de "o" */
     int min, max;
-    // TODO: chamada da funcao indice_min e indice_max
-    printf("[13] ind_min=%d, ind_max=%d: \n", min, max); 
+    min = indice_min(o, 5);
+    max = indice_max(o, 5);
+    printf("[13] ind_min=%d, ind_max=%d: \n", min, max);
 
-    print_int(v2,5);
+    print_int(v2, 5);
     printf("[14]: apos remover valor 2 de v2: ");
     int n = 5;
-    // TODO: chamada da funcao remove_primeiro de v2
-    print_int(v2,n);
+    remove_primeiro(v2, &n, 2);
+    print_int(v2, n);
 
     printf("[15]: apos inverter v2: ");
-    // TODO: chamada da funcao inverte de v2
-    print_int(v2,4);
+    inverte(v2, n);
+    print_int(v2, n);
 
     free(v1);
     v1 = NULL;
@@ -158,128 +123,162 @@ int main(void) {
 }
 
 /* =============================================================
-   PARTE A — Chamada por VALOR
+   PARTE A - Chamada por VALOR
    ============================================================= */
 
-/* 1) Preveja a saída — cópia não altera o original */
+/* 1) A funcao recebe uma copia de x. Alterar essa copia nao afeta a
+      variavel original passada no main (por isso "a" continua 10). */
 void inc(int x) {
-    /* TODO: incrementar x (a cópia). Explique depois por que não altera o original. */
+    x = x + 1;
 }
 
-/* 2) Troca que NÃO troca (por valor) */
+/* 2) Mesmo raciocinio: x e y sao copias locais. A "troca" acontece
+      apenas dentro da funcao e e perdida quando ela retorna. */
 void troca_invalida(int x, int y) {
-    /* TODO: tente trocar x e y (cópias). Observe no main que não afeta a e b. */
+    int tmp = x;
+    x = y;
+    y = tmp;
 }
 
-/* 3) (Conceitual) — justificar por que não é possível trocar sem ponteiros. */
-/* Sem código obrigatório. */
+/* 3) Sem ponteiros, a funcao so tem acesso as copias dos valores
+      (passagem por valor). Para alterar as variaveis do chamador e
+      necessario passar o endereco delas (ponteiro), permitindo que a
+      funcao acesse e modifique o conteudo original via *ponteiro. */
 
 /* =============================================================
-   PARTE B — Simulando chamada por REFERÊNCIA (ponteiros)
+   PARTE B - Simulando chamada por REFERENCIA (ponteiros)
    ============================================================= */
 
-/* 4) Troca que FUNCIONA (swap por referência) */
+/* 4) Troca por referencia: x e y sao enderecos, entao *x e *y acessam
+      diretamente as variaveis originais do chamador. */
 void troca_ref(int *x, int *y) {
-    /* TODO: implemente swap usando um temporário e *x / *y */
-    int tmp;
-    tmp = *x;
+    int tmp = *x;
     *x = *y;
     *y = tmp;
 }
 
-/* 5) Incremento por referência */
+/* 5) Incrementa o conteudo apontado por p */
 void inc_ref(int *p) {
-    /* TODO: incremente o conteúdo apontado por p */
     if (!p) return;
-    *p = *p + 1; // *p += 1;
-    //*p++;
-    //(*p)++;
-    //*(p++);
-    //*(p+1);
+    *p = *p + 1;
 }
 
-/* 6) Troca condicional: troca apenas se *a > *b; retorna 1 se trocou, 0 caso contrário */
+/* 6) So troca se *a for maior que *b; informa se houve troca */
 int troca_se_maior(int *a, int *b) {
-    /* TODO: implemente a lógica condicional com ponteiros */
     if (!a || !b) return 0;
+    if (*a > *b) {
+        int tmp = *a;
+        *a = *b;
+        *b = tmp;
+        return 1;
+    }
     return 0;
 }
 
-/* 7) Normalização de três valores: subtrai a média de cada um */
+/* 7) Calcula a media dos tres valores e subtrai de cada um */
 void normaliza_trio(float *x, float *y, float *z) {
-    /* TODO: calcule m=(x+y+z)/3 e subtraia de cada */
     if (!x || !y || !z) return;
+    float m = (*x + *y + *z) / 3.0f;
+    *x -= m;
+    *y -= m;
+    *z -= m;
 }
 
 /* =============================================================
-   PARTE C — VETORES (passagem por referência automática)
+   PARTE C - VETORES (passagem por referencia automatica)
    ============================================================= */
 
-/* 8) Zera vetor */
+/* 8) Zera todas as posicoes de v[0..n-1] usando aritmetica de ponteiros */
 void zera(int *v, int n) {
-    /* TODO: colocar zero em todas as posições de v[0..n-1] */
-/*
-    int i;
-    for (i = 0; i < n; i++)
-        *(v + i) = 0; // v[i] = 0;
-*/
-/*
-    int *p;
-    for (p = v; p < (v + n); p++)
-        *p = 0;
-*/
     int *fim = v + n;
     for (; v < fim; v++)
         *v = 0;
 }
 
-/* 9) Soma e média (sem alterar o vetor) */
+/* 9) Soma dos elementos, sem alterar o vetor original (por isso "const") */
 int soma(const int *v, int n) {
-    /* TODO: acumular e retornar a soma */
-    return 0;
+    int i, s = 0;
+    for (i = 0; i < n; i++)
+        s += v[i];
+    return s;
 }
 
 float media_int(const int *v, int n) {
-    /* TODO: retornar soma/(float)n; trate n<=0 conforme orientação do professor(a) */
-    return 0;
+    if (n <= 0) return 0.0f;
+    return soma(v, n) / (float) n;
 }
 
-/* 10) Escala in-place: v[i] *= k */
+/* 10) Multiplica cada elemento por k, alterando o vetor in-place */
 void escala(float *v, int n, float k) {
-    /* TODO */
+    int i;
+    for (i = 0; i < n; i++)
+        v[i] *= k;
 }
 
-/* 11) Troca de extremos: v[0] <-> v[n-1] */
+/* 11) Troca v[0] com v[n-1] */
 void troca_extremos(int *v, int n) {
-    /* TODO */
-
+    if (n < 2) return;
+    int tmp = v[0];
+    v[0] = v[n - 1];
+    v[n - 1] = tmp;
 }
 
-/* 12) Filtragem por faixa em outro vetor; retorna quantidade copiada */
+/* 12) Copia para "destino" os elementos de "origem" que estao entre L e U,
+       mantendo a ordem original. Retorna quantos foram copiados. */
 int filtra_faixa(const float *origem, int n, float *destino, float L, float U) {
-    /* TODO: copiar mantendo a ordem se L <= origem[i] <= U */
-    return 0;
+    int i, k = 0;
+    for (i = 0; i < n; i++) {
+        if (origem[i] >= L && origem[i] <= U) {
+            destino[k] = origem[i];
+            k++;
+        }
+    }
+    return k;
 }
 
-/* 13) Índice do mínimo e do máximo (primeira ocorrência) */
+/* 13) Indice da primeira ocorrencia do menor e do maior valor */
 int indice_min(const float *v, int n) {
-    /* TODO */
-    return 0;
+    int i, idx = 0;
+    for (i = 1; i < n; i++)
+        if (v[i] < v[idx])
+            idx = i;
+    return idx;
 }
 
 int indice_max(const float *v, int n) {
-    /* TODO */
-    return 0;
+    int i, idx = 0;
+    for (i = 1; i < n; i++)
+        if (v[i] > v[idx])
+            idx = i;
+    return idx;
 }
 
-/* 14) Remover a primeira ocorrência e deslocar; atualiza *n */
+/* 14) Remove a primeira ocorrencia de "alvo", deslocando os elementos
+       seguintes uma posicao para a esquerda e diminuindo *n */
 void remove_primeiro(int *v, int *n, int alvo) {
-    /* TODO: encontrar índice, deslocar à esquerda, decrementar *n */
+    int i, idx = -1;
+    for (i = 0; i < *n; i++) {
+        if (v[i] == alvo) {
+            idx = i;
+            break;
+        }
+    }
+    if (idx == -1) return; /* nao encontrado */
+
+    for (i = idx; i < *n - 1; i++)
+        v[i] = v[i + 1];
+
+    (*n)--;
 }
 
-/* 15) Inversão in-place */
+/* 15) Inverte o vetor in-place usando dois indices que se encontram no meio */
 void inverte(int *v, int n) {
-    /* TODO: use dois índices i (início) e j (fim) */
+    int i = 0, j = n - 1;
+    while (i < j) {
+        int tmp = v[i];
+        v[i] = v[j];
+        v[j] = tmp;
+        i++;
+        j--;
+    }
 }
-
-
