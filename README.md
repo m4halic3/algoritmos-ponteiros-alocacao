@@ -7,11 +7,12 @@ O guia segue a ordem em que esses temas fazem mais sentido pra aprender: primeir
 ## Estrutura do repositório
 
 ```
-Listas-em-c/   # arquivos .c originais com os exercícios completos
-README.md      # este guia, explicando o raciocínio por trás de cada exercício
+lista1-funcoes.c       # exemplos de funções: parâmetro, retorno e recursão
+lista2-referencia.c    # exemplos de ponteiros, chamada por referência e vetores
+README.md              # este guia, explicando o raciocínio por trás de cada exemplo
 ```
 
-Os trechos de código comentados ao longo deste README são extraídos e adaptados dos arquivos dentro de `Listas-em-c/` (`lista1-funcoes.c` e `lista2_funcoes_ponteiros.c`). Eles servem como **base de estudo**: a leitura explica o porquê de cada linha, mas o aprendizado fica mais sólido rodando, alterando e testando os arquivos originais da pasta no seu compilador (GCC, VS Code, Dev-C++, o que preferir). Sempre que possível, compile o exercício, quebre o código de propósito e observe o que muda, essa é a forma mais rápida de internalizar o conteúdo.
+Os trechos de código comentados ao longo deste README são extraídos e adaptados de `lista1-funcoes.c` e `lista2-referencia.c`. Os dois arquivos já vêm com a implementação completa e comentada linha a linha, servindo como material de apoio pronto para consulta. Eles servem também como **base de estudo ativo**: a leitura explica o porquê de cada linha, mas o aprendizado fica mais sólido rodando, alterando e testando os arquivos originais no seu compilador (GCC, VS Code, Dev-C++, o que preferir). Sempre que possível, compile o exemplo, quebre o código de propósito e observe o que muda, essa é a forma mais rápida de internalizar o conteúdo.
 
 ## Sumário
 
@@ -30,7 +31,7 @@ Os trechos de código comentados ao longo deste README são extraídos e adaptad
 
 ## 1. Funções: a base antes dos ponteiros
 
-> Código-base para praticar: `Listas-em-c/lista1-funcoes.c`. Essa lista restringe o uso de ponteiros e struct de propósito, o foco aqui é só entender função, parâmetro e retorno.
+> Código-base para praticar: `lista1-funcoes.c`. O arquivo não usa ponteiro nem struct de propósito, o foco aqui é só entender função, parâmetro e retorno.
 
 Antes de qualquer ponteiro, vale consolidar o que é uma função em C: um bloco de código que recebe valores de entrada (parâmetros), faz algo com eles, e devolve um resultado (`return`).
 
@@ -87,8 +88,7 @@ int potencia(int base, int expoente) {
 }
 
 int fatorial(int n) {
-    int i, result;
-    result = 1;
+    int i, result = 1;
     for (i = n; i > 0; i--)
         result *= i;
     return result;
@@ -101,7 +101,7 @@ int fatorial(int n) {
 
 ```c
 int fatorial_rec(int n) {
-    if (n == 1 || n == 0)
+    if (n == 0 || n == 1)
         return 1; // caso base: obrigatório, senão a função nunca para de se chamar
     return n * fatorial_rec(n - 1); // caso recursivo: quebra o problema em um menor
 }
@@ -194,7 +194,7 @@ printf("%d", *p);  // 10, acesso indireto (seguindo a carta até a casa)
 *p = 20; // não muda a carta em si, muda o CONTEÚDO da casa pra onde ela aponta
 ```
 
-`*p = 10;` não troca o endereço escrito na carta, troca o que está dentro da casa apontada por ela. É a diferença entre reescrever o envelope com outro endereço e ir até a casa e reformar o que tem lá dentro.
+`*p = 20;` não troca o endereço escrito na carta, troca o que está dentro da casa apontada por ela. É a diferença entre reescrever o envelope com outro endereço e ir até a casa e reformar o que tem lá dentro.
 
 ### Um detalhe que costuma travar bastante
 
@@ -268,6 +268,16 @@ int *p_i = &i;
 p_i++; // pula 4 bytes (o tamanho de um int), não 1 byte
 ```
 
+Essa é exatamente a lógica usada em `lista2-referencia.c` para preencher o vetor `v1` sem usar colchetes nenhuma vez:
+
+```c
+*v1 = 1;
+for (p = v1 + 1; p < v1 + 5; p++)
+    *p = *(p - 1) + 1;
+// p começa na segunda casa da rua (v1 + 1) e anda até a quinta (v1 + 5),
+// preenchendo cada casa com o valor da casa anterior mais 1
+```
+
 ### A equivalência que costuma faltar
 
 ```c
@@ -284,7 +294,7 @@ for (int i = 0; i < 5; i++) printf("%d\n", *(pv + i));
 
 ## 5. Chamada por valor x chamada por referência
 
-> Código-base para praticar: `Listas-em-c/lista2_funcoes_ponteiros.c` (exercícios) e `Listas-em-c/lista2_funcoes_ponteiros-sol.c` (soluções comentadas). Os trechos abaixo são recortes desses arquivos.
+> Código-base para praticar: `lista2-referencia.c`. Os trechos abaixo são recortes desse arquivo.
 
 Esse é o assunto mais cobrado em prova. A pergunta que resume tudo:
 
@@ -302,9 +312,9 @@ Chamando `inc(a)` no `main`, o valor de `a` continua exatamente o mesmo depois. 
 
 ```c
 void troca_invalida(int x, int y) {
-    int temp = x;
+    int tmp = x;
     x = y;
-    y = temp; // troca as CÓPIAS de lugar, os originais continuam intactos
+    y = tmp; // troca as CÓPIAS de lugar, os originais continuam intactos
 }
 ```
 
@@ -349,18 +359,20 @@ Em C, `return` só devolve um único valor. Passar por referência é a forma de
 ```c
 void normaliza_trio(float *x, float *y, float *z) {
     if (!x || !y || !z) return;
-    float m = (*x + *y + *z) / 3;
+    float m = (*x + *y + *z) / 3.0f;
     *x -= m;
     *y -= m;
     *z -= m;
 }
 ```
 
+Nesse caso a função "retorna" três resultados de uma vez, um em cada casa apontada por `x`, `y` e `z`, coisa que um único `return` nunca conseguiria fazer sozinho.
+
 ---
 
 ## 6. Vetores como referência automática
 
-> Continuação da mesma lista de exercícios (`Listas-em-c/lista2_funcoes_ponteiros.c`), agora com funções que recebem vetores inteiros como parâmetro. Vale abrir o arquivo e testar cada função isoladamente antes de seguir pro próximo exercício.
+> Continuação do mesmo arquivo (`lista2-referencia.c`), agora com funções que recebem vetores inteiros como parâmetro. Vale abrir o arquivo e testar cada função isoladamente antes de seguir pro próximo tópico.
 
 Diferente de uma variável simples, um vetor já é passado por referência sem precisar de `&`, porque o nome do vetor já é um endereço:
 
@@ -373,8 +385,9 @@ Pense nisso como "emprestar a rua inteira automaticamente": a função recebe o 
 ```c
 /* Zera todas as posições do vetor */
 void zera(int *v, int n) {
-    for (int i = 0; i < n; i++)
-        v[i] = 0; // ou: *(v + i) = 0;
+    int *fim = v + n;
+    for (; v < fim; v++)
+        *v = 0; // ou: v[i] = 0
 }
 ```
 
@@ -387,7 +400,7 @@ int soma(const int *v, int n) {
 }
 
 float media_int(const int *v, int n) {
-    if (n <= 0) return 0;
+    if (n <= 0) return 0.0f;
     return soma(v, n) / (float) n;
 }
 ```
@@ -402,9 +415,10 @@ void escala(float *v, int n, float k) {
 
 /* Troca o primeiro elemento com o último */
 void troca_extremos(int *v, int n) {
+    if (n < 2) return;
     int tmp = v[0];
-    v[0] = v[n-1];
-    v[n-1] = tmp;
+    v[0] = v[n - 1];
+    v[n - 1] = tmp;
 }
 ```
 
@@ -434,17 +448,20 @@ int indice_min(const float *v, int n) {
 ```c
 /* Remove a primeira ocorrência de um valor e desloca o restante */
 void remove_primeiro(int *v, int *n, int alvo) {
-    int i;
-    for (i = 0; i < *n; i++)
-        if (v[i] == alvo) break;
-    if (i == *n) return; // não encontrou o valor
-    for (; i < *n - 1; i++)
-        v[i] = v[i+1];
+    int idx = -1;
+    for (int i = 0; i < *n; i++) {
+        if (v[i] == alvo) { idx = i; break; }
+    }
+    if (idx == -1) return; // não encontrou o valor
+
+    for (int i = idx; i < *n - 1; i++)
+        v[i] = v[i + 1];
+
     (*n)--; // atualiza o tamanho lógico do vetor pra quem chamou a função
 }
 ```
 
-Aqui `n` também é passado como ponteiro (`int *n`), porque a função precisa alterar o tamanho lógico do vetor pra quem chamou, exatamente o mesmo raciocínio de "múltiplo retorno via referência" visto antes.
+Aqui `n` também é passado como ponteiro (`int *n`), porque a função precisa alterar o tamanho lógico do vetor pra quem chamou, exatamente o mesmo raciocínio de "múltiplo retorno via referência" visto na seção anterior.
 
 ```c
 /* Inverte o vetor no próprio lugar */
@@ -463,7 +480,7 @@ void inverte(int *v, int n) {
 
 ## 7. Alocação dinâmica de memória
 
-> O trecho abaixo é o mesmo raciocínio usado em `Listas-em-c/lista2_funcoes_ponteiros-sol.c`, no ponto em que o vetor estático `v1[5] = {1,2,3,4,5};` é reescrito usando `malloc`. Comparar as duas versões lado a lado, a estática e a dinâmica, ajuda a enxergar exatamente o que muda.
+> O trecho abaixo é o mesmo raciocínio usado em `lista2-referencia.c`, no ponto em que o vetor `v1` deixa de ser um vetor estático (`int v1[5]`) e passa a ser reservado em tempo de execução com `malloc`.
 
 ### Quando a rua ainda não existe
 
@@ -472,13 +489,17 @@ void inverte(int *v, int n) {
 Pra isso existe o Heap: uma área de memória que pode ser "encomendada" ao sistema operacional em tempo de execução, do tamanho exato que for preciso naquele momento.
 
 ```c
-int *v1;
-v1 = (int *) malloc(5 * sizeof(int));
+int *v1 = (int *) malloc(5 * sizeof(int));
 if (v1 == NULL) return 1; // regra de ouro: sempre verifique se a encomenda deu certo
 
 *v1 = 1;
 for (int *p = v1 + 1; p < v1 + 5; p++)
     *p = *(p - 1) + 1;
+
+/* ... uso normal do vetor ... */
+
+free(v1);   // devolve o bloco pro sistema operacional
+v1 = NULL;  // evita usar um endereço que já foi devolvido
 ```
 
 Esse é o mesmo raciocínio de `int v1[5] = {1,2,3,4,5};`, só que construído em tempo de execução em vez de tempo de compilação.
@@ -574,7 +595,7 @@ free(matriz); // só depois libera o vetor de ponteiros
 Tente responder cada uma sem consultar o material, e só depois confira com o texto acima:
 
 1. Por que `soma(a, b)` não altera `a` e `b` originais, mesmo usando `return`?
-2. Por que `fatorial_rec` precisa de um caso base (`n == 1 || n == 0`)?
+2. Por que `fatorial_rec` precisa de um caso base (`n == 0 || n == 1`)?
 3. Qual a diferença entre `p`, `&p` e `*p`?
 4. Por que `troca_invalida(a, b)` não troca `a` e `b`, mas `troca_ref(&a, &b)` troca?
 5. Por que `zera(v1, 5)` funciona sem precisar de `&v1`?
@@ -584,4 +605,4 @@ Tente responder cada uma sem consultar o material, e só depois confira com o te
 
 ---
 
-Se esse material te ajudou, sinta-se à vontade pra abrir uma issue com dúvidas ou sugestões de melhoria. Contribuições que tragam mais exemplos comentados são bem-vindas.
+Se esse material ajudar, fica à vontade pra abrir uma issue com dúvidas ou sugestões de melhoria. Contribuições que tragam mais exemplos comentados são bem-vindas.
