@@ -6,7 +6,7 @@ title: Funções, Ponteiros e Alocação Dinâmica em C
 <style>
 .top-toolbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   gap: 0.6rem;
   flex-wrap: wrap;
@@ -94,14 +94,13 @@ title: Funções, Ponteiros e Alocação Dinâmica em C
 }
 </style>
 
-# Funções, Ponteiros, Chamada por Referência e Alocação Dinâmica em C
-{: .page-title }
-
 <div class="top-toolbar" markdown="0">
   <a href="https://github.com/m4halic3/algoritmos-ponteiros-alocacao/blob/main/Listas-em-c/lista1-funcoes.c"><img src="https://img.shields.io/badge/ver-lista1--funcoes.c-0f6e56?style=for-the-badge&logo=c&logoColor=white" alt="lista1-funcoes.c"></a>
   <a href="https://github.com/m4halic3/algoritmos-ponteiros-alocacao/blob/main/Listas-em-c/lista2-referencia.c"><img src="https://img.shields.io/badge/ver-lista2--referencia.c-0f6e56?style=for-the-badge&logo=c&logoColor=white" alt="lista2-referencia.c"></a>
 </div>
 
+# Funções, Ponteiros, Chamada por Referência e Alocação Dinâmica em C
+{: .page-title }
 
 ---
 
