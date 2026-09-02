@@ -1,18 +1,19 @@
 /*
- * Lista 1 – Revisão de Funções
- * Disciplina: Programação Estruturada
+ * Lista 1 - RevisÃ£o de FunÃ§Ãµes
+ * Disciplina: ProgramaÃ§Ã£o Estruturada
  *
- * Conteúdo:
- *  - Declaração e implementação de funções
- *  - Passagem de parâmetros por valor
+ * ConteÃºdo:
+ *  - DeclaraÃ§Ã£o e implementaÃ§Ã£o de funÃ§Ãµes
+ *  - Passagem de parÃ¢metros por valor
  *  - Retorno de valores
- *  - Chamada correta das funções
+ *  - Chamada correta das funÃ§Ãµes
  *
- * RESTRIÇÕES:
- *  - NÃO usar ponteiros
- *  - NÃO usar struct
+ * RESTRIÃ‡Ã•ES:
+ *  - NÃ£o usar ponteiros
+ *  - NÃ£o usar struct
  *
  * Arquivo: lista1-funcoes.c
+ * Material de apoio - soluÃ§Ã£o comentada.
  */
 
 #include <stdio.h>
@@ -32,97 +33,86 @@ int main(void) {
 
     int a = 4, b = 6, r;
 
-    /* TODO: chamar a função soma e armazenar o resultado em r */
     r = soma(a, b);
     printf("Soma: %d\n", r);
 
-    /* TODO: chamar a função eh_par */
     if (eh_par(b))
         printf("Par: %d\n", b);
+    else
+        printf("Impar: %d\n", b);
 
-    /* TODO: chamar a função maior */
-    printf("Maior: %d\n", maior(a,b));
+    printf("Maior: %d\n", maior(a, b));
 
-    /* TODO: chamar a função potencia */
     printf("Potencia: %d\n", potencia(2, 10));
 
-    /* TODO: chamar a função fatorial */
     printf("Fatorial: %d\n", fatorial(a));
 
-    /* TODO: chamar a função fatorial_rec */
     printf("Fatorial Recursivo: %d\n", fatorial_rec(a));
 
     return 0;
 }
 
 /* ============================================================
-   EXERCÍCIO 1 — Soma de dois números
+   EXERCICIO 1 - Soma de dois numeros
    ============================================================ */
 
 int soma(int x, int y) {
-    /* TODO: retornar a soma de a e b */
+    /* Soma simples de dois parametros recebidos por valor */
     return x + y;
 }
 
 /* ============================================================
-   EXERCÍCIO 2 — Verificar número par
+   EXERCICIO 2 - Verificar numero par
    ============================================================ */
 
 int eh_par(int n) {
-    /* TODO: retornar 1 se n for par, 0 caso contrário */
+    /* Um numero e par quando o resto da divisao por 2 e zero */
     if (n % 2 == 0)
         return 1;
     return 0;
 }
 
 /* ============================================================
-   EXERCÍCIO 3 — Maior de dois números
+   EXERCICIO 3 - Maior de dois numeros
    ============================================================ */
 
 int maior(int a, int b) {
-    /* TODO: retornar o maior valor entre a e b */
     if (a > b)
         return a;
     return b;
 }
 
 /* ============================================================
-   EXERCÍCIO 4 — Potência
+   EXERCICIO 4 - Potencia
    ============================================================ */
 
 int potencia(int base, int expoente) {
-    /* TODO: calcular base^expoente sem usar pow */
+    /* Multiplica "base" por si mesma "expoente" vezes, sem usar pow() */
     int i, result = 1;
-    for(i = 0; i < expoente; i++)
+    for (i = 0; i < expoente; i++)
         result *= base;
     return result;
 }
 
 /* ============================================================
-   EXERCÍCIO 5 — Fatorial
+   EXERCICIO 5 - Fatorial (versao iterativa)
    ============================================================ */
 
 int fatorial(int n) {
-    /* TODO: calcular e retornar o fatorial de n */
-    int i, result;
-
-    result = 1;
+    int i, result = 1;
     for (i = n; i > 0; i--)
         result *= i;
-
     return result;
 }
 
 /* ============================================================
-   EXERCÍCIO 6 — Fatorial Recursico
+   EXERCICIO 6 - Fatorial (versao recursiva)
    ============================================================ */
 
 int fatorial_rec(int n) {
-
-    // Caso base
-    if (n == 1 || n == 0)
+    /* Caso base: 0! e 1! valem 1 */
+    if (n == 0 || n == 1)
         return 1;
-
-    return n * fatorial_rec(n-1);
-
+    /* Caso recursivo: n! = n * (n-1)! */
+    return n * fatorial_rec(n - 1);
 }
