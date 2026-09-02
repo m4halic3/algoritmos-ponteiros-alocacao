@@ -3,19 +3,106 @@ layout: default
 title: Funções, Ponteiros e Alocação Dinâmica em C
 ---
 
-<div align="center">
+<style>
+.top-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
 
-# Funções, Ponteiros, Chamada por Referência e Alocação Dinâmica em C
+.top-toolbar img {
+  height: 28px;
+}
 
-<a href="https://github.com/m4halic3/algoritmos-ponteiros-alocacao/blob/main/lista1-funcoes.c"><img src="https://img.shields.io/badge/ver-lista1--funcoes.c-0f6e56?style=for-the-badge&logo=c&logoColor=white" alt="lista1-funcoes.c"></a>
-<a href="https://github.com/m4halic3/algoritmos-ponteiros-alocacao/blob/main/lista2-referencia.c"><img src="https://img.shields.io/badge/ver-lista2--referencia.c-0f6e56?style=for-the-badge&logo=c&logoColor=white" alt="lista2-referencia.c"></a>
+.page-title {
+  text-align: center;
+  margin-top: 0;
+}
 
+.doc-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.sidebar-toc {
+  flex: 0 0 260px;
+  position: sticky;
+  top: 1.5rem;
+  align-self: flex-start;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  padding: 1rem 1.2rem;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  background: #f6f8fa;
+  font-size: 0.92rem;
+}
+
+.sidebar-toc-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.78rem;
+  color: #57606a;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-toc li {
+  margin: 0.35rem 0;
+  line-height: 1.3;
+}
+
+.sidebar-toc a {
+  text-decoration: none;
+  color: #0f6e56;
+}
+
+.sidebar-toc a:hover {
+  text-decoration: underline;
+}
+
+.doc-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .doc-layout {
+    flex-direction: column;
+  }
+
+  .sidebar-toc {
+    position: static;
+    width: 100%;
+    max-height: none;
+    margin-bottom: 1.5rem;
+  }
+
+  .top-toolbar {
+    justify-content: center;
+  }
+}
+</style>
+
+<div class="top-toolbar" markdown="0">
+  <a href="https://github.com/m4halic3/algoritmos-ponteiros-alocacao/blob/main/lista1-funcoes.c"><img src="https://img.shields.io/badge/ver-lista1--funcoes.c-0f6e56?style=for-the-badge&logo=c&logoColor=white" alt="lista1-funcoes.c"></a>
+  <a href="https://github.com/m4halic3/algoritmos-ponteiros-alocacao/blob/main/lista2-referencia.c"><img src="https://img.shields.io/badge/ver-lista2--referencia.c-0f6e56?style=for-the-badge&logo=c&logoColor=white" alt="lista2-referencia.c"></a>
 </div>
 
----
+# Funções, Ponteiros, Chamada por Referência e Alocação Dinâmica em C
+{: .page-title }
 
-* TOC
-{:toc}
+---
 
 Guia didático e prático para quem trava tentando entender como uma função recebe e devolve valores, por que uma variável não muda dentro dela, qual a diferença entre `&x` e `*p`, ou como mexer em vetores sem usar colchetes.
 
@@ -31,20 +118,27 @@ README.md              # este guia, explicando o raciocínio por trás de cada e
 
 Os trechos de código comentados ao longo deste README são extraídos e adaptados de `lista1-funcoes.c` e `lista2-referencia.c`. Os dois arquivos já vêm com a implementação completa e comentada linha a linha, servindo como material de apoio pronto para consulta. Eles servem também como **base de estudo ativo**: a leitura explica o porquê de cada linha, mas o aprendizado fica mais sólido rodando, alterando e testando os arquivos originais no seu compilador (GCC, VS Code, Dev-C++, o que preferir). Sempre que possível, compile o exemplo, quebre o código de propósito e observe o que muda, essa é a forma mais rápida de internalizar o conteúdo.
 
-## Sumário
-
-1. [Funções: a base antes dos ponteiros](#1-funções-a-base-antes-dos-ponteiros)
-2. [O que é um ponteiro](#2-o-que-é-um-ponteiro)
-3. [Declarando e usando ponteiros](#3-declarando-e-usando-ponteiros)
-4. [Ponteiros e vetores](#4-ponteiros-e-vetores)
-5. [Chamada por valor x chamada por referência](#5-chamada-por-valor-x-chamada-por-referência)
-6. [Vetores como referência automática](#6-vetores-como-referência-automática)
-7. [Alocação dinâmica de memória](#7-alocação-dinâmica-de-memória)
-8. [Matrizes dinâmicas](#8-matrizes-dinâmicas)
-9. [Checklist de erros comuns](#9-checklist-de-erros-comuns)
-10. [Perguntas de fixação](#10-perguntas-de-fixação)
-
 ---
+
+<div class="doc-layout" markdown="0">
+
+<nav class="sidebar-toc" markdown="0">
+<div class="sidebar-toc-title">Sumário</div>
+<ul>
+  <li><a href="#1-funções-a-base-antes-dos-ponteiros">1. Funções: a base antes dos ponteiros</a></li>
+  <li><a href="#2-o-que-é-um-ponteiro">2. O que é um ponteiro</a></li>
+  <li><a href="#3-declarando-e-usando-ponteiros">3. Declarando e usando ponteiros</a></li>
+  <li><a href="#4-ponteiros-e-vetores">4. Ponteiros e vetores</a></li>
+  <li><a href="#5-chamada-por-valor-x-chamada-por-referência">5. Chamada por valor x chamada por referência</a></li>
+  <li><a href="#6-vetores-como-referência-automática">6. Vetores como referência automática</a></li>
+  <li><a href="#7-alocação-dinâmica-de-memória">7. Alocação dinâmica de memória</a></li>
+  <li><a href="#8-matrizes-dinâmicas">8. Matrizes dinâmicas</a></li>
+  <li><a href="#9-checklist-de-erros-comuns">9. Checklist de erros comuns</a></li>
+  <li><a href="#10-perguntas-de-fixação">10. Perguntas de fixação</a></li>
+</ul>
+</nav>
+
+<div class="doc-content" markdown="1">
 
 ## 1. Funções: a base antes dos ponteiros
 
@@ -619,6 +713,9 @@ Tente responder cada uma sem consultar o material, e só depois confira com o te
 6. O que `p++` faz de verdade quando `p` é `int*`?
 7. Por que esquecer o `free()` é perigoso?
 8. Numa matriz dinâmica, por que as linhas são liberadas antes da matriz principal?
+
+</div>
+</div>
 
 ---
 
