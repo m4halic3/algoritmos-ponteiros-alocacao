@@ -1,5 +1,5 @@
-# Funções, Ponteiros, Chamada por Referência e Alocação Dinâmica em C
-
+* TOC
+{:toc}
 Guia didático e prático para quem trava tentando entender como uma função recebe e devolve valores, por que uma variável não muda dentro dela, qual a diferença entre `&x` e `*p`, ou como mexer em vetores sem usar colchetes.
 
 O guia segue a ordem em que esses temas fazem mais sentido pra aprender: primeiro funções puras (parâmetro, retorno, recursão, sem ponteiro nenhum), depois ponteiros e tudo que se apoia neles. A partir da seção de ponteiros, o conteúdo segue **uma única analogia** do início ao fim: endereços e cartas. A ideia é que, uma vez que essa analogia fizer sentido, todo o resto (vetores, alocação dinâmica) vira só uma aplicação repetida da mesma ideia.

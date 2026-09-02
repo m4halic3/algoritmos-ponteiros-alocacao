@@ -1,0 +1,6 @@
+theme: jekyll-theme-primer
+title: Funções, Ponteiros e Alocação Dinâmica em C
+description: Guia didático para quem trava tentando entender ponteiros e alocação em C
+markdown: kramdown
+kramdown:
+  toc_levels: 2..3
